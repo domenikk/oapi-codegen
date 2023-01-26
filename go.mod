@@ -1,4 +1,4 @@
-module github.com/deepmap/oapi-codegen
+module github.com/domenikk/oapi-codegen
 
 require (
 	github.com/Masterminds/sprig/v3 v3.2.3
