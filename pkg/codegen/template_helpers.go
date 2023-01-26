@@ -20,6 +20,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/Masterminds/sprig/v3"
 	"github.com/deepmap/oapi-codegen/pkg/util"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/text/cases"
@@ -273,27 +274,30 @@ func stripNewLines(s string) string {
 
 // TemplateFunctions is passed to the template engine, and we can call each
 // function here by keyName from the template code.
-var TemplateFunctions = template.FuncMap{
-	"genParamArgs":               genParamArgs,
-	"genParamTypes":              genParamTypes,
-	"genParamNames":              genParamNames,
-	"genParamFmtString":          ReplacePathParamsWithStr,
-	"swaggerUriToEchoUri":        SwaggerUriToEchoUri,
-	"swaggerUriToChiUri":         SwaggerUriToChiUri,
-	"swaggerUriToGinUri":         SwaggerUriToGinUri,
-	"swaggerUriToGorillaUri":     SwaggerUriToGorillaUri,
-	"lcFirst":                    LowercaseFirstCharacter,
-	"ucFirst":                    UppercaseFirstCharacter,
-	"ucFirstWithPkgName":         UppercaseFirstCharacterWithPkgName,
-	"camelCase":                  ToCamelCase,
-	"genResponsePayload":         genResponsePayload,
-	"genResponseTypeName":        genResponseTypeName,
-	"genResponseUnmarshal":       genResponseUnmarshal,
-	"getResponseTypeDefinitions": getResponseTypeDefinitions,
-	"toStringArray":              toStringArray,
-	"lower":                      strings.ToLower,
-	"title":                      titleCaser.String,
-	"stripNewLines":              stripNewLines,
-	"sanitizeGoIdentity":         SanitizeGoIdentity,
-	"toGoComment":                StringWithTypeNameToGoComment,
-}
+var TemplateFunctions = MergeMaps(
+	template.FuncMap{
+		"genParamArgs":               genParamArgs,
+		"genParamTypes":              genParamTypes,
+		"genParamNames":              genParamNames,
+		"genParamFmtString":          ReplacePathParamsWithStr,
+		"swaggerUriToEchoUri":        SwaggerUriToEchoUri,
+		"swaggerUriToChiUri":         SwaggerUriToChiUri,
+		"swaggerUriToGinUri":         SwaggerUriToGinUri,
+		"swaggerUriToGorillaUri":     SwaggerUriToGorillaUri,
+		"lcFirst":                    LowercaseFirstCharacter,
+		"ucFirst":                    UppercaseFirstCharacter,
+		"ucFirstWithPkgName":         UppercaseFirstCharacterWithPkgName,
+		"camelCase":                  ToCamelCase,
+		"genResponsePayload":         genResponsePayload,
+		"genResponseTypeName":        genResponseTypeName,
+		"genResponseUnmarshal":       genResponseUnmarshal,
+		"getResponseTypeDefinitions": getResponseTypeDefinitions,
+		"toStringArray":              toStringArray,
+		"lower":                      strings.ToLower,
+		"title":                      titleCaser.String,
+		"stripNewLines":              stripNewLines,
+		"sanitizeGoIdentity":         SanitizeGoIdentity,
+		"toGoComment":                StringWithTypeNameToGoComment,
+	},
+	sprig.FuncMap(),
+)
